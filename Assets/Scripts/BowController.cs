@@ -17,6 +17,11 @@ public class BowController : MonoBehaviour
     [SerializeField]
     GameObject arrowPrefab;
 
+    [SerializeField]
+    float minAngle;
+    [SerializeField]
+    float maxAngle;
+
 
     GameObject currentArrow;
     void Start()
@@ -35,7 +40,8 @@ public class BowController : MonoBehaviour
             if (hitInfo.point.z > transform.position.z)
             {
                 transform.LookAt(hitInfo.point);
-                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 0, 0);
+                float xAngle = transform.rotation.eulerAngles.x > 90 ? transform.rotation.eulerAngles.x - 360 : transform.rotation.eulerAngles.x;
+                transform.rotation = Quaternion.Euler(Mathf.Clamp(xAngle, minAngle, maxAngle), 0, 0);
             }
         }
 
@@ -53,17 +59,22 @@ public class BowController : MonoBehaviour
 
     void ReadyBow()
     {
-        readyBow.SetActive(true);
-        unReadyBow.SetActive(false);
+        if (readyBow != null)
+        {
+            readyBow.SetActive(true);
+            unReadyBow.SetActive(false);
+        }
 
         currentArrow = Instantiate(arrowPrefab, transform.position, transform.rotation, this.transform);
     }
 
     void ReleaseBow()
     {
-        readyBow.SetActive(false);
-        unReadyBow.SetActive(true);
-
-        currentArrow.GetComponent<Arrow>().Fire();
+        if (readyBow != null)
+        {
+            readyBow.SetActive(false);
+            unReadyBow.SetActive(true);
+        }
+        currentArrow.GetComponent<Projectile>().Fire();
     }
 }

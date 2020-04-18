@@ -5,52 +5,33 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
     // Start is called before the first frame update
-
-    Rigidbody rb;
-
-    float gravity = 5;
-
-    bool active;
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
+        
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (active)
-        {
-            rb.velocity = new Vector3(0, rb.velocity.y - gravity * Time.deltaTime, rb.velocity.z);
-            rb.rotation = Quaternion.LookRotation(rb.velocity);
-        }
+        
     }
-
-    public void Fire()
-    {
-        rb.isKinematic = false;
-        rb.velocity = transform.forward * 10f;
-        transform.parent = null;
-
-        active = true;
-
-    }
-
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.GetComponent<Arrow>() != null)
+        if (collision.collider.GetComponent<Projectile>() != null)
         {
             return;
         }
-        if(collision.collider.GetComponent<Enemy>() != null)
+        if (collision.collider.GetComponent<Enemy>() != null)
         {
             collision.collider.GetComponent<Enemy>().Die();
+            transform.parent = collision.transform;
         }
-        active = false;
-        rb.isKinematic = true;
-        rb.velocity = Vector3.zero;
+        
+        
+        GetComponent<Projectile>().enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
         GetComponent<BoxCollider>().enabled = false;
 
     }
