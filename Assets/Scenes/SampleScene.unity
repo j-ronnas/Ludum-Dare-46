@@ -166,6 +166,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectAim: {fileID: 1875567775}
+  readyBow: {fileID: 39490065972441102}
+  unReadyBow: {fileID: 8261437958674513741}
+  arrowPrefab: {fileID: 5255253535331309610, guid: ae0ded58eb8446843b60b44036376c40,
+    type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +478,7 @@ GameObject:
   - component: {fileID: 6447158706949648358}
   - component: {fileID: 8654480434174936935}
   m_Layer: 0
-  m_Name: Bow_unloaded
+  m_Name: Bow_ready
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1052,7 +1056,7 @@ GameObject:
   - component: {fileID: 349569380892533749}
   - component: {fileID: 2980352612714943200}
   m_Layer: 0
-  m_Name: Bow_loaded.001
+  m_Name: Bow_lunready
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

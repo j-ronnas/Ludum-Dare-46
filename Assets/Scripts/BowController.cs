@@ -8,6 +8,17 @@ public class BowController : MonoBehaviour
 
     [SerializeField]
     GameObject gameObjectAim;
+
+    [SerializeField]
+    GameObject readyBow;
+    [SerializeField]
+    GameObject unReadyBow;
+
+    [SerializeField]
+    GameObject arrowPrefab;
+
+
+    GameObject currentArrow;
     void Start()
     {
         
@@ -29,6 +40,31 @@ public class BowController : MonoBehaviour
             }
         }
 
+        if (Input.GetMouseButtonDown(0))
+        {
+            ReadyBow();
+        }
 
+        if (Input.GetMouseButtonUp(0))
+        {
+            ReleaseBow();
+        }
+
+    }
+
+    void ReadyBow()
+    {
+        readyBow.SetActive(true);
+        unReadyBow.SetActive(false);
+
+        currentArrow = Instantiate(arrowPrefab, transform.position, transform.rotation, this.transform);
+    }
+
+    void ReleaseBow()
+    {
+        readyBow.SetActive(false);
+        unReadyBow.SetActive(true);
+
+        currentArrow.GetComponent<Arrow>().Fire();
     }
 }
