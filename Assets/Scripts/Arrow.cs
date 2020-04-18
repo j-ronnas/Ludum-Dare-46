@@ -7,8 +7,10 @@ public class Arrow : MonoBehaviour
     // Start is called before the first frame update
 
     Rigidbody rb;
-    float startAngle;
-    float t = -1; 
+
+    float gravity = 5;
+
+    bool active;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -18,28 +20,34 @@ public class Arrow : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (t >= 0 && t<1)
+        if (active)
         {
-            t += Time.deltaTime/10;
-            float xAngle = Mathf.Lerp(startAngle, 90, t);
-            
-            rb.MoveRotation(Quaternion.Euler(xAngle, 0, 0));
-            rb.velocity = transform.forward * 10f;
+            rb.velocity = new Vector3(0, rb.velocity.y - gravity * Time.deltaTime, rb.velocity.z);
+            rb.rotation = Quaternion.LookRotation(rb.velocity);
         }
     }
 
     public void Fire()
     {
         rb.isKinematic = false;
-        startAngle = transform.rotation.eulerAngles.x;
-        startAngle -= startAngle > 90 ? 360 : 0;
-        Debug.Log(startAngle);
-        Debug.Log(rb.velocity);
-        Debug.Log(transform.forward);
-        t = 0;
-
-
+        rb.velocity = transform.forward * 10f;
         transform.parent = null;
+
+        active = true;
+
+    }
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.GetComponent<Arrow>() != null)
+        {
+            return;
+        }
+        active = false;
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        GetComponent<BoxCollider>().enabled = false;
 
     }
 }
