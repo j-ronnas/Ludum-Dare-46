@@ -31,7 +31,6 @@ public class BowController : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(ray, out hitInfo))
         {
-            Debug.Log(hitInfo.collider.name);
             gameObjectAim.transform.position = hitInfo.point;
             if (hitInfo.point.z > transform.position.z)
             {

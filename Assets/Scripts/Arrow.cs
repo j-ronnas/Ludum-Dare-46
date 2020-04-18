@@ -44,6 +44,10 @@ public class Arrow : MonoBehaviour
         {
             return;
         }
+        if(collision.collider.GetComponent<Enemy>() != null)
+        {
+            collision.collider.GetComponent<Enemy>().Die();
+        }
         active = false;
         rb.isKinematic = true;
         rb.velocity = Vector3.zero;
