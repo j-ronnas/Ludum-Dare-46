@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: be1b7b92b979a35468eff65204822d3a
+guid: 35088d74ae3423a48a868b224e76e9aa
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,9 +8,9 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Ferrum
+  fontName: Fragment Core
   fontNames:
-  - Ferrum
+  - Fragment Core
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

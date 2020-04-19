@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -18,6 +20,11 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField]
     UpgradeManager upgradeManager;
+
+    [SerializeField]
+    Text nextWaveText;
+
+    
     void Start()
     {
         level = -1;
@@ -29,7 +36,7 @@ public class EnemySpawner : MonoBehaviour
         unitCounter = new int[10];
         for (int i = 0; i < 10; i++)
         {
-            unitCounter[i] = 3*i +1;
+            unitCounter[i] = Mathf.CeilToInt(0.5f*i*i + 2*i +1);
         }
     }
 
@@ -53,7 +60,7 @@ public class EnemySpawner : MonoBehaviour
         {
             SpawnEnemy();
             time -= spawnTime;
-            spawnTime = Random.Range(0.5f, 3f);
+            spawnTime = Random.Range(0.5f, 3f - level*0.2f);
             noSpawned++;
         }
     }
@@ -71,6 +78,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void PlayLevel()
     {
+        
         level++;
 
         if (level >= unitCounter.Length)
@@ -82,15 +90,22 @@ public class EnemySpawner : MonoBehaviour
         spawnTime = 1f;
         noSpawned = 0;
         noKilled = 0;
+
+        nextWaveText.text = level < unitCounter.Length - 1 ? "Enemies next day: " + unitCounter[level + 1].ToString() : "Final level!";
         
     }
 
-    public void OnUnitDeath()
+    public void OnUnitDeath(float zPos)
     {
-        
+        upgradeManager.EnemyKilled(zPos);
         noKilled++;
         if(noKilled >= unitCounter[level])
         {
+            if (level >= unitCounter.Length -1)
+            {
+                upgradeManager.Win();
+                return;
+            }
             upgradeManager.OnLevelFinish();
         }
         Debug.Log("NO killed: "  + noKilled);

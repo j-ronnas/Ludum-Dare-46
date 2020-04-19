@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField]
+    GameObject deathSound;
 
     CastleHealth castleHealth;
     BarricadeHealth barricadeHealth;
@@ -24,7 +26,7 @@ public class Enemy : MonoBehaviour
     public EnemyState currentState;
 
     float time;
-    float attackTime = 2f;
+    float attackTime = 1.5f;
     void Start()
     {
         currentState = EnemyState.MOVING;
@@ -107,7 +109,9 @@ public class Enemy : MonoBehaviour
         currentState = EnemyState.DEAD;
         deathRotation = Quaternion.Euler(0, Random.Range(0, 360), 90);
         GetComponent<BoxCollider>().enabled = false;
-        FindObjectOfType<EnemySpawner>().OnUnitDeath();
+        FindObjectOfType<EnemySpawner>().OnUnitDeath(transform.position.z);
+
+        Instantiate(deathSound);
     }
 
     float baseHeight;

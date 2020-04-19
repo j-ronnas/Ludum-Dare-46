@@ -14,6 +14,9 @@ public class CastleHealth : MonoBehaviour
     [SerializeField]
     Slider healthSlider;
 
+    [SerializeField]
+    GameObject hitSound;
+
     int health;
     int maxHealth = 10;
     void Start()
@@ -33,6 +36,8 @@ public class CastleHealth : MonoBehaviour
     {
         health -= 1;
         healthSlider.value = health;
+        Instantiate(hitSound);
+
         if(health <= 0)
         {
             FindObjectOfType<UpgradeManager>().Loose();

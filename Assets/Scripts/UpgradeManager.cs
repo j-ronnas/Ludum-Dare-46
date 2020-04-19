@@ -59,11 +59,12 @@ public class UpgradeManager : MonoBehaviour
         }
 
         money = 0;
-        moneyText.text ="Gold:    " + money.ToString();
+        moneyText.text ="Gold: " + money.ToString();
         shooterManager.Pause();
         day = 0;
-        dayText.text = dayText.text = "Day:    "  + day.ToString();
+        dayText.text = dayText.text = "Day: "  + day.ToString();
         castleHealth = FindObjectOfType<CastleHealth>();
+        itLevel = 1;
         HandleITUpgrade();
 
     }
@@ -80,17 +81,17 @@ public class UpgradeManager : MonoBehaviour
         shooterManager.Pause();
 
 
-        int newMoney = 30 + itLevel * (10 * itLevel);
+        int newMoney = itLevel * (10);
         money += newMoney;
-        moneyText.text = "Gold:    " + money.ToString();
+        moneyText.text = "Gold: " + money.ToString();
         FindObjectOfType<Popup>().ShowMessage("+"  + newMoney.ToString() + " gold");
     }
 
     void HandleITUpgrade()
     {
-        int itCost = itLevel * 30 + 40;
+        int itCost = itLevel * 10 + 10;
 
-        itUpgradeText.text = "Upgrade IT    (+" + (10 * (itLevel+1)).ToString() + " g per day)   [" + itCost.ToString() + " g]";
+        itUpgradeText.text = "Upgrade IT (+" + (10).ToString() + " g per day)   [" + itCost.ToString() + " g]";
 
         
     }
@@ -106,7 +107,7 @@ public class UpgradeManager : MonoBehaviour
     }
     public void BuyCannonballs()
     {
-        if (TrySpendMoney(10))
+        if (TrySpendMoney(5))
         {
             cannon.IncreaseAmmo();
         }
@@ -118,7 +119,7 @@ public class UpgradeManager : MonoBehaviour
             FindObjectOfType<Popup>().ShowMessage("Already built");
             return;
         }
-        if (TrySpendMoney(20)) {
+        if (TrySpendMoney(10)) {
             barricade.EnableBarricade();
         }
     }
@@ -138,7 +139,7 @@ public class UpgradeManager : MonoBehaviour
 
     public void UpgradeIT()
     {
-        if(TrySpendMoney(itLevel * 30 + 40))
+        if(TrySpendMoney( itLevel * 10 + 10))
         {
             itLevel++;
             Instantiate(itUpgradGO, itUpgradePos.transform.position + Vector3.up * 3f * (itLevel), Quaternion.identity);
@@ -154,7 +155,7 @@ public class UpgradeManager : MonoBehaviour
             return false;
         }
         money -= amount;
-        moneyText.text = "Gold:    " + money.ToString();
+        moneyText.text = "Gold: " + money.ToString();
         return true;
     }
 
@@ -163,7 +164,7 @@ public class UpgradeManager : MonoBehaviour
     {
         panel.SetActive(false);
         day++;
-        dayText.text = "Day:    " +  day.ToString();
+        dayText.text = "Day: " +  day.ToString();
         shooterManager.UnPause();
         enemySpawner.PlayLevel();
     }
@@ -171,15 +172,32 @@ public class UpgradeManager : MonoBehaviour
     public void Win()
     {
         winScreen.SetActive(true);
+        shooterManager.Pause();
     }
 
     public void Loose()
     {
         looseScreen.SetActive(true);
+        shooterManager.Pause();
     }
 
     public void Reload()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void EnemyKilled(float zPos)
+    {
+        float t = zPos/(enemySpawner.transform.position.z - castleHealth.transform.position.z);
+        t = t < 0.3f ? 0f : t;
+        int amount = (int)Mathf.Lerp(0,8, t);
+        money += amount;
+        FindObjectOfType<Popup>().ShowMessage("+ " + amount.ToString() + " gold");
+        moneyText.text = "Gold: " + money.ToString();
     }
 }

@@ -35,6 +35,8 @@ public class BowController : MonoBehaviour
     float timer;
     float maxTime = 1.5f;
 
+    [SerializeField]
+    GameObject soundEffect;
     // Update is called once per frame
     void Update()
     {
@@ -98,6 +100,7 @@ public class BowController : MonoBehaviour
         }
         currentArrow.GetComponent<Projectile>().Fire(1);
         DecreaseAmmo();
+        Instantiate(soundEffect);
     }
 
 

@@ -35,7 +35,14 @@ public class Popup : MonoBehaviour
 
     public void ShowMessage(string message)
     {
-        textComp.text = message;
+        if (timer < showTime)
+        {
+            textComp.text += "\n" + message;
+        }
+        else
+        {
+            textComp.text = message;
+        }
         timer = 0;
 
     }

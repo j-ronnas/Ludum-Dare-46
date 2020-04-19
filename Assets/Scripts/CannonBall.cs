@@ -10,6 +10,8 @@ public class CannonBall : MonoBehaviour
 
     [SerializeField]
     GameObject explosionEffect;
+    [SerializeField]
+    GameObject soundEffect;
 
     void Start()
     {
@@ -40,7 +42,7 @@ public class CannonBall : MonoBehaviour
         }
 
         Instantiate(explosionEffect, transform.position, Quaternion.identity);
-
+        Instantiate(soundEffect);
 
         Destroy(gameObject);
 

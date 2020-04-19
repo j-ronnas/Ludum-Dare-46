@@ -168,6 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8faf64f9796ad25429763eac44caa8c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 3
+  range: 4
   explosionEffect: {fileID: 573132079172974395, guid: d358cfab910c1d540a0801ad31702772,
+    type: 3}
+  soundEffect: {fileID: 5114980738696027963, guid: 46fd1ce4047c3774a8d8bdd530ecdeca,
     type: 3}
