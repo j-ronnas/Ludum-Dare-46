@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,13 +7,17 @@ public class Enemy : MonoBehaviour
 {
 
     CastleHealth castleHealth;
+    BarricadeHealth barricadeHealth;
 
     public Enemy enemyAhead;
+
+    public float speed;
     // Start is called before the first frame update
     public enum EnemyState
     {
         MOVING,
-        ATTACKING,
+        ATTACKING_CASTLE,
+        ATTACKING_BARRICADE,
         DEAD
     }
 
@@ -24,6 +29,7 @@ public class Enemy : MonoBehaviour
     {
         currentState = EnemyState.MOVING;
         castleHealth = FindObjectOfType<CastleHealth>();
+        barricadeHealth = FindObjectOfType<BarricadeHealth>();
         baseHeight = transform.position.y;
     }
 
@@ -41,7 +47,10 @@ public class Enemy : MonoBehaviour
                 if(enemyAhead == null)
                 {
                     if (transform.position.z <= castleHealth.transform.position.z) {
-                        currentState = EnemyState.ATTACKING;
+                        currentState = EnemyState.ATTACKING_CASTLE;
+                    }else if (transform.position.z <= barricadeHealth.transform.position.z && barricadeHealth.active)
+                    {
+                        currentState = EnemyState.ATTACKING_BARRICADE;
                     }
                     else
                     {
@@ -52,18 +61,34 @@ public class Enemy : MonoBehaviour
                     MoveForward();
                 }
                 break;
-            case EnemyState.ATTACKING:
+            case EnemyState.ATTACKING_CASTLE:
                 time += Time.deltaTime;
                 if(time >= attackTime)
                 {
                     castleHealth.TakeDamage();
                     time -= attackTime;
                 }
+
+                transform.rotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0, 45, 0), time/attackTime);
+                break;
+            case EnemyState.ATTACKING_BARRICADE:
+                if (!barricadeHealth.active)
+                {
+                    currentState = EnemyState.MOVING;
+                }
+                time += Time.deltaTime;
+                if (time >= attackTime)
+                {
+                    barricadeHealth.TakeDamage();
+                    time -= attackTime;
+                }
+
+                transform.rotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(0, 45, 0), time / attackTime);
                 break;
             case EnemyState.DEAD:
                 if(rotTimer <= 1)
                 {
-                    rotTimer += Time.deltaTime;
+                    rotTimer += Time.deltaTime*2f;
                     transform.rotation = Quaternion.Lerp(Quaternion.identity, deathRotation, rotTimer);
                 }
                 return;
@@ -81,7 +106,8 @@ public class Enemy : MonoBehaviour
     {
         currentState = EnemyState.DEAD;
         deathRotation = Quaternion.Euler(0, Random.Range(0, 360), 90);
-
+        GetComponent<BoxCollider>().enabled = false;
+        FindObjectOfType<EnemySpawner>().OnUnitDeath();
     }
 
     float baseHeight;
@@ -89,9 +115,9 @@ public class Enemy : MonoBehaviour
     void MoveForward()
     {
         moveTime = (moveTime + Time.deltaTime);
-        transform.position -= transform.forward * Time.deltaTime * 2f;
+        transform.position -= transform.forward * Time.deltaTime * speed;
         transform.position = new Vector3(transform.position.x, baseHeight + 0.2f*Mathf.Sin(moveTime*10f), transform.position.z);
-
+        transform.rotation = Quaternion.Euler(0, 0, 5f*Mathf.Sin(moveTime * 10f));
         
     }
 }

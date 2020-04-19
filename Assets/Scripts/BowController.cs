@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class BowController : MonoBehaviour
 {
@@ -22,12 +24,16 @@ public class BowController : MonoBehaviour
     [SerializeField]
     float maxAngle;
 
+    [SerializeField]
+    Text ammoText;
+
+    public int ammo;
 
     GameObject currentArrow;
-    void Start()
-    {
-        
-    }
+
+
+    float timer;
+    float maxTime = 1.5f;
 
     // Update is called once per frame
     void Update()
@@ -50,6 +56,11 @@ public class BowController : MonoBehaviour
             ReadyBow();
         }
 
+        if (Input.GetMouseButton(0) && timer <= maxTime)
+        {
+            timer += Time.deltaTime;
+        }
+
         if (Input.GetMouseButtonUp(0))
         {
             ReleaseBow();
@@ -59,6 +70,11 @@ public class BowController : MonoBehaviour
 
     void ReadyBow()
     {
+        if (ammo <= 0)
+        {
+            FindObjectOfType<Popup>().ShowMessage("No ammo!");
+            return;
+        }
         if (readyBow != null)
         {
             readyBow.SetActive(true);
@@ -66,15 +82,33 @@ public class BowController : MonoBehaviour
         }
 
         currentArrow = Instantiate(arrowPrefab, transform.position, transform.rotation, this.transform);
+        timer = 0;
     }
 
     void ReleaseBow()
     {
+        if (ammo <= 0)
+        {
+            return;
+        }
         if (readyBow != null)
         {
             readyBow.SetActive(false);
             unReadyBow.SetActive(true);
         }
-        currentArrow.GetComponent<Projectile>().Fire();
+        currentArrow.GetComponent<Projectile>().Fire(1);
+        DecreaseAmmo();
+    }
+
+
+    public void IncreaseAmmo()
+    {
+        ammo++;
+        ammoText.text = ammo.ToString();
+    }
+    public void DecreaseAmmo()
+    {
+        ammo--;
+        ammoText.text = ammo.ToString();
     }
 }

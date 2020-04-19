@@ -31,13 +31,13 @@ public class Projectile : MonoBehaviour
         rb.rotation = Quaternion.LookRotation(rb.velocity);
     }
 
-    public void Fire()
+    public void Fire(float force)
     {
         rb = GetComponent<Rigidbody>();
 
         active = true;
         rb.isKinematic = false;
-        rb.velocity = transform.forward * speed;
+        rb.velocity = transform.forward * speed*force;
         transform.parent = null;
 
     }

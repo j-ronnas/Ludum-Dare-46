@@ -33,6 +33,10 @@ public class CastleHealth : MonoBehaviour
     {
         health -= 1;
         healthSlider.value = health;
+        if(health <= 0)
+        {
+            FindObjectOfType<UpgradeManager>().Loose();
+        }
     }
 
     public void Heal()
@@ -52,5 +56,10 @@ public class CastleHealth : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public bool IsFullHealth()
+    {
+        return health == maxHealth;
     }
 }

@@ -16,11 +16,24 @@ public class ShooterManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && !Input.GetMouseButton(0))
         {
             bowControllers[currentBow].enabled = false;
             currentBow = (currentBow + 1)%bowControllers.Length;
             bowControllers[currentBow].enabled = true;
         }
+    }
+
+    public void Pause()
+    {
+        for (int i = 0; i < bowControllers.Length; i++)
+        {
+            bowControllers[i].enabled = false;
+        }
+    }
+
+    public void UnPause()
+    {
+        bowControllers[currentBow].enabled = true;
     }
 }
